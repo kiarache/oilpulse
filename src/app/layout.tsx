@@ -4,6 +4,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "오일펄스 | OilPulse",
   description: "중동 지정학 리스크 · 유가 · 환율 · 에너지 시장 실시간 모니터링 대시보드",
+  icons: {
+    icon: "/icon.svg",
+    apple: "/apple-icon.svg",
+  },
 };
 
 export default function RootLayout({
