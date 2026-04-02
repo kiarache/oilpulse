@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { BarChart3 } from "lucide-react";
 
 interface TradingViewChartProps {
   symbol: string;
@@ -56,11 +55,10 @@ export default function TradingViewChart({
   }, [symbol, dateRange]);
 
   return (
-    <div className="glass-card px-4 py-2.5 flex flex-col gap-1">
-      <div className="widget-header">
-        <BarChart3 size={14} className="text-blue-400" />
-        <span>{label}</span>
-        <span className="ml-auto text-[10px] text-slate-600 normal-case tracking-normal">TradingView</span>
+    <div className="card px-3 py-2 flex flex-col gap-1">
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-medium text-[var(--text-secondary)]">{label}</span>
+        <span className="text-[10px] text-[var(--text-muted)]">TradingView</span>
       </div>
       <div ref={containerRef} className="tradingview-widget-container w-full" />
     </div>

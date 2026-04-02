@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLink, Clock, Newspaper } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import type { NewsItem } from "@/app/api/news/route";
 
 interface NewsFeedProps {
@@ -17,12 +17,12 @@ function timeAgo(dateStr: string): string {
 }
 
 const TAG_MAP: Record<string, { label: string; color: string }> = {
-  유가: { label: "유가", color: "bg-amber-500/15 text-amber-400 border-amber-500/20" },
-  OPEC: { label: "OPEC", color: "bg-orange-500/15 text-orange-400 border-orange-500/20" },
-  환율: { label: "환율", color: "bg-blue-500/15 text-blue-400 border-blue-500/20" },
-  정유: { label: "정유", color: "bg-purple-500/15 text-purple-400 border-purple-500/20" },
-  중동: { label: "중동", color: "bg-red-500/15 text-red-400 border-red-500/20" },
-  에너지: { label: "에너지", color: "bg-green-500/15 text-green-400 border-green-500/20" },
+  유가: { label: "유가", color: "text-[var(--accent-brand)] bg-[var(--accent-brand)]/10" },
+  OPEC: { label: "OPEC", color: "text-[var(--accent-brand)] bg-[var(--accent-brand)]/10" },
+  환율: { label: "환율", color: "text-sky-400 bg-sky-500/10" },
+  정유: { label: "정유", color: "text-violet-400 bg-violet-500/10" },
+  중동: { label: "중동", color: "text-[var(--accent-up)] bg-[var(--accent-up)]/10" },
+  에너지: { label: "에너지", color: "text-[var(--accent-down)] bg-[var(--accent-down)]/10" },
 };
 
 function detectTag(title: string): { label: string; color: string } | null {
@@ -36,17 +36,13 @@ function detectTag(title: string): { label: string; color: string } | null {
 
 export default function NewsFeed({ items }: NewsFeedProps) {
   return (
-    <div className="glass-card px-5 py-3 flex flex-col gap-2 min-h-0 overflow-hidden">
-      <div className="widget-header shrink-0">
-        <Newspaper size={14} className="text-amber-400" />
-        <span>에너지·유가 시장 뉴스</span>
-      </div>
+    <div className="card px-4 py-3 flex flex-col gap-2 min-h-0 overflow-hidden">
+      <span className="text-xs font-medium text-[var(--text-secondary)] shrink-0">
+        에너지·유가 뉴스
+      </span>
       {items.length === 0 ? (
         <div className="flex-1 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-2 text-slate-500">
-            <div className="w-8 h-8 rounded-full bg-slate-800 animate-pulse" />
-            <p className="text-sm">뉴스를 불러오는 중...</p>
-          </div>
+          <p className="text-[13px] text-[var(--text-muted)]">뉴스를 불러오는 중...</p>
         </div>
       ) : (
         <ul className="space-y-0.5 overflow-y-auto flex-1 min-h-0 pr-1">
@@ -58,24 +54,23 @@ export default function NewsFeed({ items }: NewsFeedProps) {
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block px-3 py-2 rounded-lg hover:bg-slate-800/60 transition-all duration-200 border border-transparent hover:border-slate-700/30"
+                  className="block px-2.5 py-2 rounded hover:bg-[var(--bg-card-alt)] transition-colors duration-150"
                 >
                   <div className="flex items-start gap-2">
-                    <span className="flex-1 text-sm text-slate-300 group-hover:text-white leading-snug transition-colors duration-200">
+                    <span className="flex-1 text-[13px] text-[var(--text-secondary)] group-hover:text-white leading-snug transition-colors duration-150">
                       {item.title}
                     </span>
                     <ExternalLink
-                      size={13}
-                      className="shrink-0 mt-0.5 text-slate-600 group-hover:text-slate-400 transition-colors duration-200"
+                      size={12}
+                      className="shrink-0 mt-0.5 text-[var(--text-muted)] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                     />
                   </div>
-                  <div className="flex items-center gap-1.5 mt-1 text-[11px] text-slate-500">
-                    <Clock size={10} />
+                  <div className="flex items-center gap-1.5 mt-1 text-[10px] text-[var(--text-muted)]">
                     <span>{timeAgo(item.publishedAt)}</span>
-                    <span className="text-slate-700">·</span>
+                    <span className="text-[var(--border-muted)]">·</span>
                     <span>{item.source}</span>
                     {tag && (
-                      <span className={`ml-1 px-1.5 py-0.5 rounded-md text-[10px] font-medium border ${tag.color}`}>
+                      <span className={`ml-1 px-1.5 py-0.5 rounded text-[10px] font-medium ${tag.color}`}>
                         {tag.label}
                       </span>
                     )}

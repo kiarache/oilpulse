@@ -25,7 +25,7 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
         />
       </head>
-      <body className="bg-[#050a14] text-gray-100 h-screen overflow-hidden antialiased">
+      <body className="bg-[var(--bg-primary)] text-[var(--text-primary)] h-screen overflow-hidden antialiased">
         {children}
       </body>
     </html>

@@ -4,10 +4,7 @@ import {
   TrendingUp,
   TrendingDown,
   Minus,
-  Droplets,
   FlaskConical,
-  BarChart3,
-  ExternalLink,
 } from "lucide-react";
 import type { NaphthaData } from "@/lib/types";
 
@@ -22,13 +19,13 @@ interface Props {
 export default function NaphthaWidget({ data }: Props) {
   if (!data) {
     return (
-      <div className="glass-card px-4 py-2">
+      <div className="card px-3.5 py-2">
         <div className="widget-header mb-2">
-          <FlaskConical size={15} className="text-purple-400" />
+          <FlaskConical size={13} className="text-violet-400" />
           <span>나프타 싱가포르 MOP</span>
         </div>
         <div className="flex items-center justify-center py-4">
-          <span className="text-xs text-slate-500">데이터 대기 중...</span>
+          <span className="text-[11px] text-[var(--text-muted)]">데이터 대기 중...</span>
         </div>
       </div>
     );
@@ -37,15 +34,15 @@ export default function NaphthaWidget({ data }: Props) {
   const isPositive = data.change > 0;
   const isNegative = data.change < 0;
   const changeColor = isPositive
-    ? "text-red-400"
+    ? "text-[var(--accent-up)]"
     : isNegative
-    ? "text-emerald-400"
-    : "text-slate-500";
+    ? "text-[var(--accent-down)]"
+    : "text-[var(--text-muted)]";
   const changeBg = isPositive
-    ? "bg-red-500/10"
+    ? "bg-[var(--accent-up)]/10"
     : isNegative
-    ? "bg-emerald-500/10"
-    : "bg-slate-500/10";
+    ? "bg-[var(--accent-down)]/10"
+    : "bg-[var(--bg-card-alt)]";
   const TrendIcon = isPositive ? TrendingUp : isNegative ? TrendingDown : Minus;
 
   // 소스 단축 표시
@@ -58,34 +55,29 @@ export default function NaphthaWidget({ data }: Props) {
     : data.source;
 
   return (
-    <div className="glass-card px-4 py-2 flex flex-col">
-      {/* 헤더 */}
+    <div className="card px-3.5 py-2 flex flex-col">
       <div className="flex items-center justify-between mb-1">
-        <div className="widget-header">
-          <FlaskConical size={15} className="text-purple-400" />
-          <span>나프타 싱가포르 MOP</span>
-        </div>
-        <span className="text-[10px] text-slate-600 font-medium">{sourceShort}</span>
+        <span className="text-xs font-medium text-[var(--text-secondary)]">나프타 싱가포르 MOP</span>
+        <span className="text-[10px] text-[var(--text-muted)]">{sourceShort}</span>
       </div>
 
       {/* 메인 가격 ($/MT) */}
       <div className="flex items-end justify-between mt-1">
         <div>
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-2xl font-bold text-white tabular-nums tracking-tight">
+          <div className="flex items-baseline gap-1">
+            <span className="text-xl font-bold text-white tabular-nums">
               {data.priceMT.toLocaleString("ko-KR", { maximumFractionDigits: 1 })}
             </span>
-            <span className="text-xs text-slate-500 font-medium">$/MT</span>
+            <span className="text-[10px] text-[var(--text-muted)]">$/MT</span>
           </div>
-          {/* 변동 */}
           <div className={`flex items-center gap-1 mt-0.5 ${changeColor}`}>
-            <TrendIcon size={12} />
-            <span className="text-xs font-semibold tabular-nums">
+            <TrendIcon size={11} />
+            <span className="text-[11px] font-medium tabular-nums">
               {isPositive ? "+" : ""}
               {data.change.toLocaleString("ko-KR", { maximumFractionDigits: 1 })} $/MT
             </span>
             {data.changePercent !== 0 && (
-              <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${changeBg} ${changeColor}`}>
+              <span className={`text-[10px] px-1 py-0.5 rounded ${changeBg} ${changeColor}`}>
                 {isPositive ? "+" : ""}
                 {data.changePercent.toFixed(2)}%
               </span>
@@ -93,20 +85,16 @@ export default function NaphthaWidget({ data }: Props) {
           </div>
         </div>
 
-        {/* 우측: 배럴 환산 */}
         <div className="text-right">
-          <div className="flex items-center gap-1 justify-end">
-            <Droplets size={11} className="text-purple-300/60" />
-            <span className="text-xs text-slate-500">배럴 환산</span>
-          </div>
+          <span className="text-[10px] text-[var(--text-muted)] block">배럴 환산</span>
           <div className="flex items-baseline gap-1 justify-end mt-0.5">
-            <span className="text-sm font-semibold text-slate-300 tabular-nums">
+            <span className="text-sm font-medium text-[var(--text-secondary)] tabular-nums">
               {data.priceBbl.toFixed(2)}
             </span>
-            <span className="text-[10px] text-slate-600">$/bbl</span>
+            <span className="text-[10px] text-[var(--text-muted)]">$/bbl</span>
           </div>
           {data.changeBbl !== 0 && (
-            <span className={`text-[10px] font-medium ${changeColor}`}>
+            <span className={`text-[10px] ${changeColor}`}>
               {data.changeBbl > 0 ? "+" : ""}{data.changeBbl.toFixed(2)}
             </span>
           )}
@@ -114,14 +102,9 @@ export default function NaphthaWidget({ data }: Props) {
       </div>
 
       {/* 하단 정보 */}
-      <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-700/30">
-        <div className="flex items-center gap-1.5 text-[10px] text-slate-600">
-          <BarChart3 size={10} />
-          <span>주간 · {data.weekDate}</span>
-        </div>
-        <div className="flex items-center gap-1 text-[10px] text-slate-600">
-          <span>1MT ≈ 8.9bbl</span>
-        </div>
+      <div className="flex items-center justify-between mt-2 pt-2 border-t border-[var(--border-subtle)]">
+        <span className="text-[10px] text-[var(--text-muted)]">주간 · {data.weekDate}</span>
+        <span className="text-[10px] text-[var(--text-muted)]">1MT ≈ 8.9bbl</span>
       </div>
     </div>
   );

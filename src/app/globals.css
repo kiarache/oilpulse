@@ -3,18 +3,24 @@
 @tailwind utilities;
 
 :root {
-  --background: #050a14;
-  --foreground: #ededed;
-  --card-bg: rgba(15, 23, 42, 0.6);
-  --card-border: rgba(51, 65, 85, 0.4);
-  --glow-blue: rgba(59, 130, 246, 0.15);
-  --glow-red: rgba(239, 68, 68, 0.12);
+  --bg-primary: #0c1017;
+  --bg-card: #131922;
+  --bg-card-alt: #171f2b;
+  --border-subtle: #1e2a3a;
+  --border-muted: #263042;
+  --text-primary: #e2e8f0;
+  --text-secondary: #8b9cb8;
+  --text-muted: #5a6a82;
+  --accent-up: #e85d5d;
+  --accent-down: #2dbc7f;
+  --accent-brand: #d4873b;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg-primary);
+  color: var(--text-primary);
   font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 @layer utilities {
@@ -23,95 +29,70 @@ body {
   }
 }
 
-/* 글래스모피즘 카드 기본 스타일 */
 @layer components {
-  .glass-card {
-    @apply rounded-2xl border border-slate-700/40 bg-slate-900/60 backdrop-blur-md;
-    box-shadow:
-      0 0 0 1px rgba(148, 163, 184, 0.05),
-      0 4px 24px -4px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(148, 163, 184, 0.06);
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
   }
 
-  .glass-card-hover {
-    @apply glass-card transition-all duration-300;
+  .card-alt {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
   }
 
-  .glass-card-hover:hover {
-    @apply border-slate-600/60;
-    box-shadow:
-      0 0 0 1px rgba(148, 163, 184, 0.08),
-      0 8px 32px -4px rgba(0, 0, 0, 0.4),
-      inset 0 1px 0 rgba(148, 163, 184, 0.1);
-    transform: translateY(-1px);
+  .card-interactive {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    transition: border-color 0.15s ease;
+  }
+
+  .card-interactive:hover {
+    border-color: var(--border-muted);
+  }
+
+  .section-label {
+    @apply flex items-center gap-1.5 text-xs font-medium text-[var(--text-muted)];
+    letter-spacing: 0.01em;
   }
 
   .widget-header {
-    @apply flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400;
+    @apply flex items-center gap-1.5 text-xs font-medium;
+    color: var(--text-secondary);
   }
 
   .widget-divider {
-    @apply border-t border-slate-700/40;
+    border-top: 1px solid var(--border-subtle);
   }
 }
 
-/* 스크롤바 스타일 */
+/* 스크롤바 */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 4px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(71, 85, 105, 0.4);
-  border-radius: 4px;
+  background: var(--border-muted);
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(71, 85, 105, 0.6);
+  background: #3a4a60;
 }
 
-/* 부드러운 애니메이션 */
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
+/* 애니메이션 */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
 
-@keyframes glow-pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.5s ease-out both;
-}
-
 .animate-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.05), transparent);
+  background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.04), transparent);
   background-size: 200% 100%;
   animation: shimmer 2s ease-in-out infinite;
-}
-
-.animate-glow-pulse {
-  animation: glow-pulse 2s ease-in-out infinite;
-}
-
-/* 배경 그리드 패턴 */
-.bg-grid-pattern {
-  background-image:
-    linear-gradient(rgba(51, 65, 85, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(51, 65, 85, 0.08) 1px, transparent 1px);
-  background-size: 40px 40px;
 }
 
 /* FHD 최적화 */
@@ -122,9 +103,9 @@ body {
   }
 }
 
-/* 세련된 포커스 스타일 */
+/* 포커스 */
 *:focus-visible {
-  outline: 2px solid rgba(59, 130, 246, 0.5);
-  outline-offset: 2px;
+  outline: 1px solid rgba(212, 135, 59, 0.6);
+  outline-offset: 1px;
   border-radius: 4px;
 }
