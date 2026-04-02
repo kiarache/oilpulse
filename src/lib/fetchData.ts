@@ -361,83 +361,7 @@ export async function getForexReserves(): Promise<ForexReservesData> {
 const NAPHTHA_BBL_PER_MT = 8.9;
 
 /**
- * Source 1 (우선): 한국석유화학공업협회(KPIA) 무료 시황
- * KPIA 웹사이트에서 주간 나프타 MOP 가격을 스크래핑합니다.
- * 사이트 구조가 JS-rendered이거나 접근 불가할 수 있으므로 null 반환 가능.
- */
-async function fetchNaphthaFromKPIA(): Promise<NaphthaData | null> {
-  const urls = [
-    "https://www.kpia.or.kr",
-    "https://www.kpia.or.kr/sub0501.asp",
-    "https://www.kpia.or.kr/module/board/boardList.do?mncd=31",
-  ];
-
-  for (const url of urls) {
-    try {
-      const res = await fetch(url, {
-        headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-          "Accept-Language": "ko-KR,ko;q=0.9",
-          "Accept": "text/html,application/xhtml+xml",
-        },
-        next: { revalidate: 21600 },
-        signal: AbortSignal.timeout(8000),
-      });
-      if (!res.ok) continue;
-
-      const html = await res.text();
-      // 나프타 가격 패턴 ($/MT 또는 $/톤 형식)
-      // 예: "나프타 620.5", "Naphtha MOP 610$/MT", "나프타 MOP 615.2"
-      const mtMatch = html.match(/나프타[\s\S]{0,100}?([\d,]+(?:\.\d+)?)\s*(?:\$\/톤|\$\/MT|USD\/MT|달러\/톤)/i)
-        ?? html.match(/(?:Naphtha|NAPHTHA)[\s\S]{0,80}?MOP[\s\S]{0,40}?([\d,]+(?:\.\d+)?)/i)
-        ?? html.match(/MOP[\s\S]{0,40}?나프타[\s\S]{0,40}?([\d,]+(?:\.\d+)?)/i);
-
-      if (mtMatch) {
-        const priceMT = parseFloat(mtMatch[1].replace(/,/g, ""));
-        if (priceMT > 200 && priceMT < 2000) {
-          // 전주 변동 파싱 시도
-          const chgMatch = html.match(/나프타[\s\S]{0,200}?(?:전주|전기|변동|change)[\s\S]{0,50}?([+-]?\d+(?:\.\d+)?)/i);
-          const change = chgMatch ? parseFloat(chgMatch[1]) : 0;
-          return {
-            priceMT,
-            priceBbl: Math.round((priceMT / NAPHTHA_BBL_PER_MT) * 100) / 100,
-            change,
-            changeBbl: Math.round((change / NAPHTHA_BBL_PER_MT) * 100) / 100,
-            changePercent: change !== 0 ? Math.round((change / (priceMT - change)) * 10000) / 100 : 0,
-            weekDate: new Date().toISOString().split("T")[0],
-            timestamp: new Date().toISOString(),
-            source: "한국석유화학공업협회 (KPIA)",
-          };
-        }
-      }
-
-      // $/bbl 형식으로 기재된 경우
-      const bblMatch = html.match(/나프타[\s\S]{0,100}?([\d]+(?:\.\d+)?)\s*(?:\$\/(?:bbl|배럴))/i);
-      if (bblMatch) {
-        const priceBbl = parseFloat(bblMatch[1]);
-        if (priceBbl > 20 && priceBbl < 200) {
-          const priceMT = Math.round(priceBbl * NAPHTHA_BBL_PER_MT * 100) / 100;
-          return {
-            priceMT,
-            priceBbl,
-            change: 0,
-            changeBbl: 0,
-            changePercent: 0,
-            weekDate: new Date().toISOString().split("T")[0],
-            timestamp: new Date().toISOString(),
-            source: "한국석유화학공업협회 (KPIA)",
-          };
-        }
-      }
-    } catch {
-      continue;
-    }
-  }
-  return null;
-}
-
-/**
- * Source 2: CME Group – Singapore Naphtha (Platts) 선물 결제가
+ * Source 1: CME Group – Singapore Naphtha (Platts) 선물 결제가
  * CME settlements 페이지를 스크래핑하여 최근 결제가를 가져옵니다.
  */
 async function fetchNaphthaFromCME(): Promise<NaphthaData | null> {
@@ -486,7 +410,7 @@ async function fetchNaphthaFromCME(): Promise<NaphthaData | null> {
 }
 
 /**
- * Source 3: TradingView Scanner API – 나프타 관련 심볼
+ * Source 2: TradingView Scanner API – 나프타 관련 심볼
  * 이미 프로젝트에서 사용 중인 TradingView Scanner API를 활용합니다.
  */
 async function fetchNaphthaFromTradingView(): Promise<NaphthaData | null> {
@@ -539,7 +463,7 @@ async function fetchNaphthaFromTradingView(): Promise<NaphthaData | null> {
 }
 
 /**
- * Source 4: Yahoo Finance – 나프타 선물 프록시
+ * Source 3: Yahoo Finance – 나프타 선물 프록시
  * CME Singapore Naphtha (Platts) Calendar Swap가 Yahoo에 상장되어 있을 수 있습니다.
  */
 async function fetchNaphthaFromYahoo(): Promise<NaphthaData | null> {
@@ -572,11 +496,10 @@ async function fetchNaphthaFromYahoo(): Promise<NaphthaData | null> {
 
 /**
  * 나프타 싱가포르 MOP 가격 조회 (다중 소스 폴백)
- * 우선순위: KPIA → CME Group → TradingView → Yahoo Finance
+ * 우선순위: CME Group → TradingView → Yahoo Finance
  */
 export async function getNaphthaPrice(): Promise<NaphthaData> {
   const sources = [
-    { name: "KPIA", fn: fetchNaphthaFromKPIA },
     { name: "CME", fn: fetchNaphthaFromCME },
     { name: "TradingView", fn: fetchNaphthaFromTradingView },
     { name: "Yahoo", fn: fetchNaphthaFromYahoo },

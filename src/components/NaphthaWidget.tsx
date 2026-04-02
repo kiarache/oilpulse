@@ -17,7 +17,7 @@ interface Props {
 
 /**
  * 나프타(싱가포르 MOP) 주간 가격 위젯
- * 다중 소스 폴백: KPIA(한국석유화학공업협회) → CME Group → TradingView → Yahoo Finance
+ * 다중 소스 폴백: CME Group → TradingView → Yahoo Finance
  */
 export default function NaphthaWidget({ data }: Props) {
   if (!data) {
@@ -49,9 +49,7 @@ export default function NaphthaWidget({ data }: Props) {
   const TrendIcon = isPositive ? TrendingUp : isNegative ? TrendingDown : Minus;
 
   // 소스 단축 표시
-  const sourceShort = data.source.includes("KPIA")
-    ? "KPIA"
-    : data.source.includes("CME")
+  const sourceShort = data.source.includes("CME")
     ? "CME"
     : data.source.includes("TradingView")
     ? "TradingView"

@@ -144,7 +144,7 @@ export default function DashboardClient({ initial }: Props) {
         <div className="flex items-center gap-1.5">
           <Clock size={12} className="text-slate-600" />
           <span suppressHydrationWarning>
-            출처: TradingView · Yahoo Finance · 오피넷 · 한국은행 · KPIA · 연합뉴스 &nbsp;|&nbsp;
+            출처: TradingView · Yahoo Finance · 오피넷 · 한국은행 · 연합뉴스 &nbsp;|&nbsp;
             마지막 업데이트: {lastUpdated.toLocaleTimeString("ko-KR")}
           </span>
         </div>
