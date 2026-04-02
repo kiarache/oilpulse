@@ -68,3 +68,14 @@ export interface TradingViewQuoteData {
   timestamp: string;
   source: string;
 }
+
+export interface NaphthaData {
+  priceMT: number;           // 나프타 싱가포르 MOP 가격 ($/MT)
+  priceBbl: number;          // 나프타 가격 ($/bbl)
+  change: number;            // 전주 대비 변동 ($/MT)
+  changeBbl: number;         // 전주 대비 변동 ($/bbl)
+  changePercent: number;     // 변동률 (%)
+  weekDate: string;          // 기준일
+  timestamp: string;
+  source: string;
+}

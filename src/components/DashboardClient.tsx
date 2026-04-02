@@ -11,7 +11,8 @@ import TradingViewChart from "./TradingViewChart";
 import DomesticFuelWidget from "./DomesticFuelWidget";
 import CheapestStationWidget from "./CheapestStationWidget";
 import ForexReservesWidget from "./ForexReservesWidget";
-import type { OilPriceData, ExchangeRateData, KoreaFuelData, NewsItem, ForexReservesData, CheapestStationData, TradingViewQuoteData } from "@/lib/types";
+import NaphthaWidget from "./NaphthaWidget";
+import type { OilPriceData, ExchangeRateData, KoreaFuelData, NewsItem, ForexReservesData, CheapestStationData, TradingViewQuoteData, NaphthaData } from "@/lib/types";
 
 interface DashboardData {
   oilPrice: OilPriceData | null;
@@ -20,19 +21,21 @@ interface DashboardData {
   forexReserves: ForexReservesData | null;
   cheapestStation: CheapestStationData | null;
   tradingView: TradingViewQuoteData | null;
+  naphtha: NaphthaData | null;
   news: NewsItem[];
 }
 
 const POLL_INTERVAL = 2 * 60 * 1000; // 2분
 
 async function fetchAll(): Promise<DashboardData> {
-  const [oilRes, rateRes, fuelRes, forexRes, cheapRes, tvRes, newsRes] = await Promise.all([
+  const [oilRes, rateRes, fuelRes, forexRes, cheapRes, tvRes, naphthaRes, newsRes] = await Promise.all([
     fetch("/api/oil-price"),
     fetch("/api/exchange-rate"),
     fetch("/api/korea-fuel"),
     fetch("/api/forex-reserves"),
     fetch("/api/cheapest-station"),
     fetch("/api/tradingview-quote").catch(() => null),
+    fetch("/api/naphtha-price").catch(() => null),
     fetch("/api/news", { cache: "no-store" }),
   ]);
   const [oil, rate, fuel, forex, cheap, news] = await Promise.all([
@@ -44,6 +47,7 @@ async function fetchAll(): Promise<DashboardData> {
     newsRes.json(),
   ]);
   const tv = tvRes ? await tvRes.json().catch(() => ({ data: null })) : { data: null };
+  const naphtha = naphthaRes ? await naphthaRes.json().catch(() => ({ data: null })) : { data: null };
   return {
     oilPrice: oil.data,
     exchangeRate: rate.data,
@@ -51,6 +55,7 @@ async function fetchAll(): Promise<DashboardData> {
     forexReserves: forex.data ?? null,
     cheapestStation: cheap.data ?? null,
     tradingView: tv.data ?? null,
+    naphtha: naphtha.data ?? null,
     news: news.data ?? [],
   };
 }
@@ -117,13 +122,14 @@ export default function DashboardClient({ initial }: Props) {
         <TradingViewChart symbol="FX_IDC:USDKRW" label="원/달러 환율" dateRange="1M" />
       </div>
 
-      {/* 중단: 유류가 + 최저가 주유소 + 리스크 지수 + 외환보유고 */}
-      <div className="grid grid-cols-4 gap-3 shrink-0 animate-fade-in-up" style={{ animationDelay: "150ms" }}>
+      {/* 중단: 유류가 + 최저가 주유소 + 리스크 지수 + 나프타 + 외환보유고 */}
+      <div className="grid grid-cols-5 gap-3 shrink-0 animate-fade-in-up" style={{ animationDelay: "150ms" }}>
         <DomesticFuelWidget data={fuel} />
         <CheapestStationWidget data={data.cheapestStation} />
         {riskWti && riskRate && (
           <RiskIndexWidget wtiPrice={riskWti} exchangeRate={riskRate} source={riskSource} />
         )}
+        <NaphthaWidget data={data.naphtha} />
         <ForexReservesWidget data={data.forexReserves} />
       </div>
 
@@ -138,7 +144,7 @@ export default function DashboardClient({ initial }: Props) {
         <div className="flex items-center gap-1.5">
           <Clock size={12} className="text-slate-600" />
           <span suppressHydrationWarning>
-            출처: TradingView · Yahoo Finance · 오피넷 · 한국은행 · 연합뉴스 &nbsp;|&nbsp;
+            출처: TradingView · Yahoo Finance · 오피넷 · 한국은행 · KPIA · 연합뉴스 &nbsp;|&nbsp;
             마지막 업데이트: {lastUpdated.toLocaleTimeString("ko-KR")}
           </span>
         </div>

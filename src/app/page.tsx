@@ -1,17 +1,18 @@
 import DashboardClient from "@/components/DashboardClient";
-import { getOilPrice, getExchangeRate, getKoreaFuel, getForexReserves, getCheapestStations, getNews, getTradingViewQuotes } from "@/lib/fetchData";
+import { getOilPrice, getExchangeRate, getKoreaFuel, getForexReserves, getCheapestStations, getNews, getTradingViewQuotes, getNaphthaPrice } from "@/lib/fetchData";
 
 async function getInitialData() {
-  const [oilPrice, exchangeRate, koreaFuel, forexReserves, cheapestStation, tradingView, news] = await Promise.all([
+  const [oilPrice, exchangeRate, koreaFuel, forexReserves, cheapestStation, tradingView, naphtha, news] = await Promise.all([
     getOilPrice(),
     getExchangeRate(),
     getKoreaFuel(),
     getForexReserves().catch(() => null),
     getCheapestStations().catch(() => null),
     getTradingViewQuotes().catch(() => null),
+    getNaphthaPrice().catch(() => null),
     getNews(),
   ]);
-  return { oilPrice, exchangeRate, koreaFuel, forexReserves, cheapestStation, tradingView, news };
+  return { oilPrice, exchangeRate, koreaFuel, forexReserves, cheapestStation, tradingView, naphtha, news };
 }
 
 export default async function HomePage() {
