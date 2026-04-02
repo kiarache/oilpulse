@@ -45,3 +45,6 @@ next-env.d.ts
 .claude/
 .bkit/
 .pdca-status.json
+
+# runtime data (리스크 이력 등)
+/data/
