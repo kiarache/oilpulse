@@ -294,7 +294,7 @@ export async function getForexReserves(): Promise<ForexReservesData> {
   const url = `https://ecos.bok.or.kr/api/StatisticSearch/${apiKey}/json/kr/1/20/732Y001/M/${startDate}/${endDate}`;
   const res = await fetch(url, {
     headers: { "User-Agent": "Mozilla/5.0 (compatible; DashboardBot/1.0)" },
-    next: { revalidate: 3600 },
+    next: { revalidate: 300 },   // 5분 캐시 — 발표 시점 빠른 반영
   });
   if (!res.ok) throw new Error(`한국은행 ECOS API 실패 (${res.status})`);
   const json = await res.json();
