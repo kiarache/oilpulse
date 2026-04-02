@@ -119,7 +119,7 @@ export default function DashboardClient({ initial }: Props) {
         <TradingViewChart symbol="TVC:USOIL" label="WTI 원유" dateRange="1M" />
         <TradingViewChart symbol="TVC:UKOIL" label="브렌트 원유" dateRange="1M" />
         <TradingViewChart symbol="FX_IDC:USDKRW" label="원/달러 환율" dateRange="1M" />
-        <TradingViewChart symbol="FX_IDC:JPYKRW" label="원/엔 환율 (100엔)" dateRange="1M" />
+        <TradingViewChart symbol="FX_IDC:JPYKRW" label="원/엔 환율" dateRange="1M" />
       </div>
 
       {/* 중단: 유류가 + 최저가 주유소 + 리스크 지수 + 외환보유고 */}
