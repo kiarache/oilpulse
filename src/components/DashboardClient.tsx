@@ -118,7 +118,7 @@ export default function DashboardClient({ initial }: Props) {
       <div className="grid grid-cols-5 gap-3 shrink-0 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
         <TradingViewChart symbol="TVC:USOIL" label="WTI 원유" dateRange="1M" />
         <TradingViewChart symbol="TVC:UKOIL" label="브렌트 원유" dateRange="1M" />
-        <TradingViewChart symbol="NYMEX:UN1!" label="나프타 (싱가포르 MOP)" dateRange="1M" />
+        <TradingViewChart symbol="NYMEX:ASP1!" label="나프타 (싱가포르 MOP)" dateRange="1M" />
         <TradingViewChart symbol="FX_IDC:USDKRW" label="원/달러 환율" dateRange="1M" />
         <TradingViewChart symbol="FX_IDC:JPYKRW" label="원/엔 환율 (100엔)" dateRange="1M" />
       </div>
