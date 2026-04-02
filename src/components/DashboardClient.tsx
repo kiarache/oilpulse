@@ -11,7 +11,6 @@ import TradingViewChart from "./TradingViewChart";
 import DomesticFuelWidget from "./DomesticFuelWidget";
 import CheapestStationWidget from "./CheapestStationWidget";
 import ForexReservesWidget from "./ForexReservesWidget";
-import NaphthaWidget from "./NaphthaWidget";
 import type { OilPriceData, ExchangeRateData, KoreaFuelData, NewsItem, ForexReservesData, CheapestStationData, TradingViewQuoteData, NaphthaData } from "@/lib/types";
 
 interface DashboardData {
@@ -115,21 +114,22 @@ export default function DashboardClient({ initial }: Props) {
         <BreakingNewsTicker items={data.news} />
       </div>
 
-      {/* TradingView 차트 3개 */}
-      <div className="grid grid-cols-3 gap-3 shrink-0 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
+      {/* TradingView 차트 5개 */}
+      <div className="grid grid-cols-5 gap-3 shrink-0 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
         <TradingViewChart symbol="TVC:USOIL" label="WTI 원유" dateRange="1M" />
         <TradingViewChart symbol="TVC:UKOIL" label="브렌트 원유" dateRange="1M" />
+        <TradingViewChart symbol="NYMEX:UN1!" label="나프타 (싱가포르 MOP)" dateRange="1M" />
         <TradingViewChart symbol="FX_IDC:USDKRW" label="원/달러 환율" dateRange="1M" />
+        <TradingViewChart symbol="FX_IDC:JPYKRW" label="원/엔 환율 (100엔)" dateRange="1M" />
       </div>
 
-      {/* 중단: 유류가 + 최저가 주유소 + 리스크 지수 + 나프타 + 외환보유고 */}
-      <div className="grid grid-cols-5 gap-3 shrink-0 animate-fade-in-up" style={{ animationDelay: "150ms" }}>
+      {/* 중단: 유류가 + 최저가 주유소 + 리스크 지수 + 외환보유고 */}
+      <div className="grid grid-cols-4 gap-3 shrink-0 animate-fade-in-up" style={{ animationDelay: "150ms" }}>
         <DomesticFuelWidget data={fuel} />
         <CheapestStationWidget data={data.cheapestStation} />
         {riskWti && riskRate && (
           <RiskIndexWidget wtiPrice={riskWti} exchangeRate={riskRate} source={riskSource} />
         )}
-        <NaphthaWidget data={data.naphtha} />
         <ForexReservesWidget data={data.forexReserves} />
       </div>
 
